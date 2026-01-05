@@ -117,14 +117,10 @@ const Hero = () => {
             </motion.div>
 
             <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-center justify-center gap-8 text-gray-400 text-sm">
-              <motion.div variants={floatVariants} animate="animate" className="flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-cheese-yellow" />
                 <span>Feb 28 - March 1, 2026</span>
-              </motion.div>
-              <motion.div variants={floatVariants} animate="animate" transition={{ delay: 0.5 }} className="flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-cheese-yellow" />
                 <span>Educational Sciences Building, UW-Madison</span>
-              </motion.div>
             </motion.div>
           </motion.div>
         </div>
