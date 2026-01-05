@@ -1,5 +1,5 @@
 import React from 'react';
-import { Github, Twitter, Instagram } from 'lucide-react';
+import { Instagram } from 'lucide-react';
 
 import GoogleText from './GoogleText';
 

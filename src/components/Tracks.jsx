@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Brain, Globe, Shield, Smartphone } from 'lucide-react';
-import GoogleText from './GoogleText';
 
 const TrackCard = ({ icon: Icon, title, description, index }) => (
   <motion.div 

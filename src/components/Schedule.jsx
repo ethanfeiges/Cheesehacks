@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Clock, Calendar } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import GoogleText from './GoogleText';
 
 const ScheduleItem = ({ time, title, description, type }) => {

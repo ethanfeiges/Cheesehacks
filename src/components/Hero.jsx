@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Calendar, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import GoogleText from './GoogleText';
+import logo from '../assets/logo.png';
 
 const Hero = () => {
   const containerVariants = {
@@ -79,83 +80,86 @@ const Hero = () => {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20" />
         
         {/* Floating Particles */}
-        {[...Array(15)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute bg-white/30 rounded-full will-change-transform"
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ 
-              opacity: [0, 0.5, 0],
-              y: -100,
-              x: Math.random() * 50 - 25
-            }}
-            transition={{
-              duration: 5 + Math.random() * 5,
-              repeat: Infinity,
-              delay: Math.random() * 5,
-              ease: "linear"
-            }}
-            style={{
-              width: Math.random() * 4 + 2 + 'px',
-              height: Math.random() * 4 + 2 + 'px',
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-            }}
-          />
-        ))}
-      </div>
+            {[...Array(15)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute bg-white/30 rounded-full will-change-transform"
+                initial={{ opacity: 0, y: 100 }}
+                animate={{ 
+                  opacity: [0, 0.5, 0],
+                  y: -100,
+                  x: Math.random() * 50 - 25
+                }}
+                transition={{
+                  duration: 5 + Math.random() * 5,
+                  repeat: Infinity,
+                  delay: Math.random() * 5,
+                  ease: "linear"
+                }}
+                style={{
+                  width: Math.random() * 4 + 2 + 'px',
+                  height: Math.random() * 4 + 2 + 'px',
+                  top: `${Math.random() * 100}%`,
+                  left: `${Math.random() * 100}%`,
+                }}
+              />
+            ))}
+              </div>
 
-      <div className="container mx-auto px-6 z-10 relative">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <motion.div variants={itemVariants}>
-              <span className="inline-block py-1 px-3 rounded-full bg-white/5 border border-white/10 text-sm font-medium mb-6 hover:bg-white/10 transition-colors cursor-default">
+              <div className="container mx-auto px-6 z-10 relative">
+            <div className="max-w-6xl mx-auto text-center">
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                <motion.div variants={itemVariants}>
+                  <span className="inline-block py-1 px-3 rounded-full bg-white/5 border border-white/10 text-sm font-medium mb-6 hover:bg-white/10 transition-colors cursor-default">
                 <span className="text-gray-300">🚀 Powered by </span>
                 <GoogleText mode="word">UW Madison Google Student Developer Club</GoogleText>
-              </span>
-            </motion.div>
-            
-            <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-tight">
-              Build the <span className="text-white italic relative inline-block">Future</span> at <br />
-                <GoogleText mode="char" className="text-6xl md:text-8xl">Cheesehacks 2026</GoogleText>
-            </motion.h1>
-            
-            <motion.p variants={itemVariants} className="text-lg md:text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-              Join 300+ student developers for 24 hours of creation and innovation. 
-            </motion.p>
-            
-            <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-center justify-center gap-4 mb-12">
-              <Link 
+                  </span>
+                </motion.div>
+                
+                <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-tight">
+                  Build the <span className="text-white italic relative inline-block">Future</span> at <br />
+                  <span className="flex items-center justify-center gap-4 mt-2">
+                    <img src={logo} alt="Cheesehacks Logo" className="h-16 w-16 md:h-20 md:w-20 rounded-full" />
+                    <GoogleText mode="char" className="text-5xl md:text-7xl">Cheesehacks 2026</GoogleText>
+                  </span>
+                </motion.h1>
+                
+                <motion.p variants={itemVariants} className="text-lg md:text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+                  Join 300+ student developers for 24 hours of creation and innovation. 
+                </motion.p>
+                
+                <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-center justify-center gap-4 mb-12">
+                  <Link 
                 to="/register"
                 className="group bg-cheese-yellow text-black px-8 py-4 rounded-full font-bold text-lg transition-all hover:bg-cheese-accent hover:scale-105 flex items-center gap-2 shadow-[0_0_20px_rgba(244,180,0,0.3)] hover:shadow-[0_0_30px_rgba(244,180,0,0.5)]"
-              >
+                  >
                 Register Now
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <a href="#schedule" className="px-8 py-4 rounded-full font-bold text-lg border border-white/10 hover:bg-white/5 transition-all hover:border-white/30">
+                  </Link>
+                  <a href="#schedule" className="px-8 py-4 rounded-full font-bold text-lg border border-white/10 hover:bg-white/5 transition-all hover:border-white/30">
                 View Schedule
-              </a>
-            </motion.div>
+                  </a>
+                </motion.div>
 
-            <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-center justify-center gap-8 text-gray-400 text-sm">
-              <div className="flex items-center gap-2">
+                <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-center justify-center gap-8 text-gray-400 text-sm">
+                  <div className="flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-cheese-yellow" />
                 <span>Feb 28 - March 1, 2026</span>
-              </div>
-              <div className="flex items-center gap-2">
+                  </div>
+                  <div className="flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-cheese-yellow" />
                 <span>Educational Sciences Building, UW-Madison</span>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </div>
               </div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </div>
-      
-      {/* Decorative Grid */}
+              
+              {/* Decorative Grid */}
       <div className="absolute bottom-0 left-0 right-0 h-[200px] bg-gradient-to-t from-[#0f0f0f] to-transparent z-20" />
       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 z-0 pointer-events-none"></div>
     </section>
