@@ -1,16 +1,31 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Clock, Calendar } from 'lucide-react';
+import GoogleText from './GoogleText';
 
 const ScheduleItem = ({ time, title, description, type }) => {
-  const getTypeColor = (type) => {
+  const getTypeStyles = (type) => {
     switch (type) {
-      case 'main': return 'border-cheese-yellow bg-cheese-yellow/10 text-cheese-yellow';
-      case 'food': return 'border-green-500 bg-green-500/10 text-green-500';
-      case 'workshop': return 'border-blue-500 bg-blue-500/10 text-blue-500';
-      default: return 'border-gray-700 bg-gray-800/50 text-gray-300';
+      case 'main': return {
+        wrapper: 'border-[#DB4437] bg-[#DB4437]/10 text-[#DB4437]', // Google Red
+        dot: 'border-[#DB4437]'
+      };
+      case 'food': return {
+        wrapper: 'border-[#0F9D58] bg-[#0F9D58]/10 text-[#0F9D58]', // Google Green
+        dot: 'border-[#0F9D58]'
+      };
+      case 'workshop': return {
+        wrapper: 'border-[#4285F4] bg-[#4285F4]/10 text-[#4285F4]', // Google Blue
+        dot: 'border-[#4285F4]'
+      };
+      default: return {
+        wrapper: 'border-[#F4B400] bg-[#F4B400]/10 text-[#F4B400]', // Google Yellow
+        dot: 'border-[#F4B400]'
+      };
     }
   };
+
+  const styles = getTypeStyles(type);
 
   return (
     <motion.div 
@@ -19,9 +34,9 @@ const ScheduleItem = ({ time, title, description, type }) => {
       viewport={{ once: true }}
       className="relative pl-8 pb-12 border-l border-white/10 last:pb-0"
     >
-      <div className={`absolute left-[-9px] top-0 w-4 h-4 rounded-full border-2 ${getTypeColor(type).split(' ')[0]} bg-[#0f0f0f]`} />
+      <div className={`absolute left-[-9px] top-0 w-4 h-4 rounded-full border-2 ${styles.dot} bg-[#0f0f0f]`} />
       <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
-        <span className={`text-sm font-mono px-2 py-1 rounded ${getTypeColor(type)} w-fit`}>
+        <span className={`text-sm font-mono px-2 py-1 rounded ${styles.wrapper} w-fit font-bold`}>
           {time}
         </span>
         <h3 className="text-xl font-bold text-white">{title}</h3>
@@ -33,7 +48,7 @@ const ScheduleItem = ({ time, title, description, type }) => {
 
 const Schedule = () => {
   const saturdaySchedule = [
-    { time: "12:00 PM", title: "Check-in Opens", description: "Grab your badge, swag, and find a spot!", type: "main" },
+    { time: "12:00 PM", title: "Check-in Opens", description: "Grab your badge, swag, and find a spot!", type: "start-end" },
     { time: "1:00 PM", title: "Opening Ceremony", description: "Kickoff, keynote speakers, and logistics.", type: "main" },
     { time: "2:00 PM", title: "Hacking Begins", description: "Start your engines! Team formation session for those looking.", type: "main" },
     { time: "3:00 PM", title: "Intro to Web Dev Workshop", description: "Learn the basics of HTML/CSS/JS.", type: "workshop" },
@@ -44,7 +59,7 @@ const Schedule = () => {
 
   const sundaySchedule = [
     { time: "8:00 AM", title: "Breakfast", description: "Bagels, coffee, and juice.", type: "food" },
-    { time: "11:00 AM", title: "Hacking Ends", description: "Submission deadline. Hands off keyboards!", type: "main" },
+    { time: "11:00 AM", title: "Hacking Ends", description: "Submission deadline. Hands off keyboards!", type: "start-end" },
     { time: "12:00 PM", title: "Lunch", description: "Pizza party while judges review.", type: "food" },
     { time: "1:00 PM", title: "Closing Ceremony", description: "Demos, winners announced, and prizes!", type: "main" },
   ];

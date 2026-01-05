@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Code2, Users, Zap } from 'lucide-react';
+import GoogleText from './GoogleText';
 
 const FeatureCard = ({ icon: Icon, title, description, index }) => (
   <motion.div 
@@ -29,19 +30,34 @@ const About = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Not just another <span className="text-gradient">hackathon</span>.
-            </h2>
-            <p className="text-gray-400 text-lg mb-6 leading-relaxed">
-              Cheesehacks is the largest student-run hackathon at the University of Wisconsin-Madison. 
-              We bring together the brightest minds in the Midwest for a weekend of coding, learning, and networking.
+            <h2 className="text-4xl font-bold mb-6">What is Cheesehacks?</h2>
+            <p className="text-gray-400 text-lg leading-relaxed mb-6">
+              Cheesehacks is UW-Madison's large-scale hackathon, bringing together students from across the Midwest 
+              for 24 hours of innovation, learning, and fun. 
             </p>
-            <p className="text-gray-400 text-lg mb-8 leading-relaxed">
-              Our mission is to empower students to build innovative solutions to real-world problems. 
-              With mentorship from industry experts, workshops on cutting-edge technologies, and thousands in prizes, 
-              Cheesehacks is the perfect launchpad for your next big idea.
+            <p className="text-gray-400 text-lg leading-relaxed mb-8">
+              Hosted by the <GoogleText>Google Student Developer Club</GoogleText>, 
+              we provide the resources, mentorship, and cheesy snacks you need to build something amazing.
             </p>
+            <div className="flex gap-4">
+              <div className="flex -space-x-3">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className={`w-14 h-14 rounded-full border-4 border-[#0f0f0f] flex items-center justify-center text-xs font-bold shadow-lg hover:scale-105 transition-transform duration-200
+                    ${i === 1 ? 'bg-gradient-to-br from-[#4285F4] to-[#3367d6]' : 
+                      i === 2 ? 'bg-gradient-to-br from-[#DB4437] to-[#c23321]' : 
+                      i === 3 ? 'bg-gradient-to-br from-[#F4B400] to-[#e37400]' : 
+                      'bg-gradient-to-br from-[#0F9D58] to-[#0d8043]'}`}
+                  >
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-col justify-center">
+                <span className="font-bold">200+ Hackers</span>
+                <span className="text-xs text-gray-500">Joined last year</span>
+              </div>
+            </div>
           </motion.div>
+
           
           <div className="grid gap-4">
             <FeatureCard 

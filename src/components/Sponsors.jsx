@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import GoogleText from './GoogleText';
 
 const Sponsors = () => {
   return (
@@ -11,7 +12,7 @@ const Sponsors = () => {
           viewport={{ once: true }}
           className="text-3xl md:text-4xl font-bold mb-16"
         >
-          Backed by <span className="text-gradient">Industry Leaders</span>
+          Backed by <GoogleText mode="word">Industry Leaders</GoogleText>
         </motion.h2>
 
         <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-24">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Brain, Globe, Shield, Smartphone } from 'lucide-react';
+import GoogleText from './GoogleText';
 
 const TrackCard = ({ icon: Icon, title, description, index }) => (
   <motion.div 
@@ -57,8 +58,7 @@ const Tracks = () => {
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">2026 Tracks</h2>
             <p className="text-gray-400">
-              Choose a track to focus your project on. We have prizes for the best hack in each category, 
-              plus a grand prize for the best overall project.
+              Choose a track to focus your project on for a chance to win exciting prizes!
             </p>
           </motion.div>
         </div>

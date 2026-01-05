@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Minus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import GoogleText from './GoogleText';
 
 const FAQItem = ({ question, answer, index }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -72,7 +73,7 @@ const FAQ = () => {
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Frequently Asked <br />
-              <span className="text-gradient">Questions</span>
+              <GoogleText mode="char">Questions</GoogleText>
             </h2>
             <p className="text-gray-400 mb-6">
               Can't find what you're looking for? <br />
