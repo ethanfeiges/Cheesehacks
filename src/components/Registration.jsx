@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Plus, Trash2, AlertCircle, CheckCircle2, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { BAD_WORDS } from '../badWords';
+
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOEm6Fwu4vRi0YH5_2CF5nEQSxe1PFp-UU-234kd6Rp771elmrzQ2o8Fyf0yJze7mUjA/exec"
 
 const Registration = () => {
   const [teamName, setTeamName] = useState('');
@@ -35,14 +38,25 @@ const Registration = () => {
   const validate = () => {
     const newErrors = {};
     const emails = new Set();
+    // Regex for bad words, case-insensitive, partial match allowed (catch things like "mybadword")
+    const badWordRegex = new RegExp(`(${BAD_WORDS.join('|')})`, 'i');
 
-    if (!teamName.trim()) newErrors.teamName = 'Team name is required';
+    if (!teamName.trim()) {
+      newErrors.teamName = 'Team name is required';
+    } else if (badWordRegex.test(teamName)) {
+      newErrors.teamName = 'Team name contains inappropriate language';
+    }
 
     members.forEach((member, index) => {
-      if (!member.name.trim()) newErrors[`member_${index}_name`] = 'Name is required';
+      if (!member.name.trim()) {
+        newErrors[`member_${index}_name`] = 'Name is required';
+      } else if (badWordRegex.test(member.name)) {
+        newErrors[`member_${index}_name`] = 'Name contains inappropriate language';
+      }
+
       if (!member.email.trim()) {
         newErrors[`member_${index}_email`] = 'Email is required';
-      } else if (!/\S+@\S+\.\S+/.test(member.email)) {
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(member.email)) {
         newErrors[`member_${index}_email`] = 'Invalid email format';
       } else if (emails.has(member.email.toLowerCase())) {
         newErrors[`member_${index}_email`] = 'Duplicate email in team';
@@ -59,14 +73,56 @@ const Registration = () => {
     e.preventDefault();
     if (!validate()) return;
 
+    if (!GOOGLE_SCRIPT_URL) {
+      alert("Registration system is currently under maintenance (URL not configured).");
+      return;
+    }
+
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    console.log('Registration Data:', { teamName, members });
-    setIsSubmitting(false);
-    setIsSuccess(true);
+    try {
+      // Send as text/plain to avoid CORS preflight issues with Google Apps Script
+      const response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({ teamName, members })
+      });
+
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        console.log('Registration Data:', { teamName, members });
+        setIsSubmitting(false);
+        setIsSuccess(true);
+      } else {
+        const msg = result.message || "Registration failed. Please try again.";
+        
+        if (msg.toLowerCase().includes("team name")) {
+          setErrors({ teamName: msg });
+        } else if (msg.toLowerCase().includes("email")) {
+          // Try to extract email from message "Email x@y.com is already..."
+          const emailMatch = msg.match(/Email (.*?) is/);
+          if (emailMatch) {
+            const badEmail = emailMatch[1].toLowerCase();
+            const memberIndex = members.findIndex(m => m.email.toLowerCase() === badEmail);
+            if (memberIndex !== -1) {
+              setErrors({ [`member_${memberIndex}_email`]: msg });
+            } else {
+              alert(msg);
+            }
+          } else {
+            alert(msg);
+          }
+        } else {
+          alert(msg);
+        }
+        setIsSubmitting(false);
+      }
+    } catch (error) {
+      console.error("Submission Error:", error);
+      alert("Network error. Please try again.");
+      setIsSubmitting(false);
+    }
   };
 
   return (

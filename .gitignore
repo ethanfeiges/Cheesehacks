@@ -155,3 +155,5 @@ MANIFEST
 # OS
 .DS_Store
 Thumbs.db
+
+src/badWords.js
