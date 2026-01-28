@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { BAD_WORDS } from '../badWords';
 
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOEm6Fwu4vRi0YH5_2CF5nEQSxe1PFp-UU-234kd6Rp771elmrzQ2o8Fyf0yJze7mUjA/exec"
-
+// TODO: make a registration deadline for the 23rd of February.
 const Registration = () => {
   const [teamName, setTeamName] = useState('');
   const [members, setMembers] = useState([{ name: '', email: '' }]);

@@ -50,15 +50,16 @@ const Schedule = () => {
   const saturdaySchedule = [
     { time: "12:00 PM", title: "Check-in Opens", description: "Grab your badge, swag, and find a spot!", type: "start-end" },
     { time: "1:00 PM", title: "Opening Ceremony", description: "Kickoff, keynote speakers, and logistics.", type: "main" },
-    { time: "2:00 PM", title: "Hacking Begins", description: "Start your engines! Team formation session for those looking.", type: "main" },
-    { time: "3:00 PM", title: "Intro to Web Dev Workshop", description: "Learn the basics of HTML/CSS/JS.", type: "workshop" },
-    { time: "6:00 PM", title: "Dinner", description: "Fuel up with some local Madison favorites.", type: "food" },
-    { time: "8:00 PM", title: "ML with Python Workshop", description: "Build your first neural network.", type: "workshop" },
+    { time: "1:30 PM", title: "Hacking Begins", description: "Start your engines! Team formation session for those looking.", type: "main" },
+    { time: "2:00 PM", title: "Google Cloud Workshop", description: "TBD", type: "workshop" },
+    { time: "3:00 PM", title: "Google Gemini Workshop", description: "TBD", type: "workshop" },
+    { time: "6:00 PM", title: "Dinner", description: "Fuel up with some pizza", type: "food" },
+    { time: "8:00 PM", title: "Google Career Workshop", description: "TBD", type: "workshop" },
     { time: "12:00 AM", title: "Midnight Snack", description: "Cheese curds (obviously).", type: "food" },
   ];
 
   const sundaySchedule = [
-    { time: "8:00 AM", title: "Breakfast", description: "Bagels, coffee, and juice.", type: "food" },
+    { time: "8:00 AM", title: "Breakfast", description: "Bagels and cream cheese", type: "food" },
     { time: "11:00 AM", title: "Hacking Ends", description: "Submission deadline. Hands off keyboards!", type: "start-end" },
     { time: "12:00 PM", title: "Lunch", description: "Pizza party while judges review.", type: "food" },
     { time: "1:00 PM", title: "Closing Ceremony", description: "Demos, winners announced, and prizes!", type: "main" },
