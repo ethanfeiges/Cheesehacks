@@ -1,11 +1,52 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Calendar, MapPin } from 'lucide-react';
+import { ArrowRight, Calendar, MapPin, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import GoogleText from './GoogleText';
 import logo from '../assets/logo.png';
 
+const REGISTRATION_DEADLINE = new Date("2026-02-23T23:59:59");
+
 const Hero = () => {
+  const [timeLeft, setTimeLeft] = useState({});
+  const [isRegistrationClosed, setIsRegistrationClosed] = useState(false);
+
+  const calculateTimeLeft = () => {
+    const difference = +REGISTRATION_DEADLINE - +new Date();
+    let timeLeft = {};
+
+    if (difference > 0) {
+      timeLeft = {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+      };
+    }
+    return timeLeft;
+  };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const remaining = calculateTimeLeft();
+      setTimeLeft(remaining);
+      
+      if (Object.keys(remaining).length === 0) {
+        setIsRegistrationClosed(true);
+        clearInterval(timer);
+      }
+    }, 1000);
+
+    // Initial check
+    const initialRemaining = calculateTimeLeft();
+    if (Object.keys(initialRemaining).length === 0) {
+      setIsRegistrationClosed(true);
+    }
+    setTimeLeft(initialRemaining);
+
+    return () => clearInterval(timer);
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -128,30 +169,56 @@ const Hero = () => {
                   </span>
                 </motion.h1>
                 
-                <motion.p variants={itemVariants} className="text-lg md:text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+                <motion.p variants={itemVariants} className="text-lg md:text-xl text-gray-400 mb-4 max-w-2xl mx-auto">
                   Join 300+ student developers for 24 hours of creation and innovation. 
                 </motion.p>
+
+                <motion.div variants={itemVariants} className="mb-8">
+                   {!isRegistrationClosed && Object.keys(timeLeft).length > 0 && (
+                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-cheese-yellow font-mono">
+                        <span>Registration closes in:</span>
+                        <span className="font-bold">
+                          {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
+                        </span>
+                      </div>
+                   )}
+                   {isRegistrationClosed && (
+                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400">
+                        <AlertCircle className="w-4 h-4" />
+                        <span className="font-bold">Registration Closed</span>
+                      </div>
+                   )}
+                </motion.div>
                 
                 <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-center justify-center gap-4 mb-12">
-                  <Link 
-                to="/register"
-                className="group bg-cheese-yellow text-black px-8 py-4 rounded-full font-bold text-lg transition-all hover:bg-cheese-accent hover:scale-105 flex items-center gap-2 shadow-[0_0_20px_rgba(244,180,0,0.3)] hover:shadow-[0_0_30px_rgba(244,180,0,0.5)]"
-                  >
-                Register Now
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </Link>
+                  {isRegistrationClosed ? (
+                    <button 
+                      disabled
+                      className="bg-gray-700 text-gray-400 px-8 py-4 rounded-full font-bold text-lg cursor-not-allowed flex items-center gap-2 opacity-70"
+                    >
+                      Registration Closed
+                    </button>
+                  ) : (
+                    <Link 
+                      to="/register"
+                      className="group bg-cheese-yellow text-black px-8 py-4 rounded-full font-bold text-lg transition-all hover:bg-cheese-accent hover:scale-105 flex items-center gap-2 shadow-[0_0_20px_rgba(244,180,0,0.3)] hover:shadow-[0_0_30px_rgba(244,180,0,0.5)]"
+                    >
+                      Register Now
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  )}
                   <a href="#schedule" className="px-8 py-4 rounded-full font-bold text-lg border border-white/10 hover:bg-white/5 transition-all hover:border-white/30">
                 View Schedule
                   </a>
                 </motion.div>
 
-                <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-center justify-center gap-8 text-gray-400 text-sm">
-                  <div className="flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-cheese-yellow" />
+                <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-center justify-center gap-8 text-gray-200 text-lg md:text-xl font-medium">
+                  <div className="flex items-center gap-3 bg-white/5 px-6 py-3 rounded-xl border border-white/10">
+                <Calendar className="w-6 h-6 text-cheese-yellow" />
                 <span>Feb 28 - March 1, 2026</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-cheese-yellow" />
+                  <div className="flex items-center gap-3 bg-white/5 px-6 py-3 rounded-xl border border-white/10">
+                <MapPin className="w-6 h-6 text-cheese-yellow" />
                 <span>Educational Sciences Building, UW-Madison</span>
                   </div>
                 </motion.div>

@@ -1,17 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Plus, Trash2, AlertCircle, CheckCircle2, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, AlertCircle, CheckCircle2, ArrowRight, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BAD_WORDS } from '../badWords';
 
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOEm6Fwu4vRi0YH5_2CF5nEQSxe1PFp-UU-234kd6Rp771elmrzQ2o8Fyf0yJze7mUjA/exec"
-// TODO: make a registration deadline for the 23rd of February.
+
+const REGISTRATION_DEADLINE = new Date("2026-02-23T23:59:59");
+
 const Registration = () => {
   const [teamName, setTeamName] = useState('');
   const [members, setMembers] = useState([{ name: '', email: '' }]);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  
+  const calculateTimeLeft = () => {
+    const difference = +REGISTRATION_DEADLINE - +new Date();
+    let timeLeft = {};
+
+    if (difference > 0) {
+      timeLeft = {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+      };
+    }
+    return timeLeft;
+  };
+
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [isRegistrationClosed, setIsRegistrationClosed] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const remaining = calculateTimeLeft();
+      setTimeLeft(remaining);
+      
+      if (Object.keys(remaining).length === 0) {
+        setIsRegistrationClosed(true);
+        clearInterval(timer);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const addMember = () => {
     if (members.length < 4) {
@@ -71,6 +105,7 @@ const Registration = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isRegistrationClosed) return;
     if (!validate()) return;
 
     if (!GOOGLE_SCRIPT_URL) {
@@ -137,6 +172,51 @@ const Registration = () => {
         <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-cheese-yellow transition-colors mb-8">
           <ArrowLeft className="w-5 h-5" /> Back to Home
         </Link>
+        
+        {!isSuccess && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-[#1a1a1a] to-[#222] border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4"
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-cheese-yellow/10 rounded-full">
+                  <Clock className="w-6 h-6 text-cheese-yellow" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white">Registration Deadline</h3>
+                  <p className="text-sm text-gray-400">Monday, February 23rd at Midnight</p>
+                </div>
+              </div>
+              
+              <div className="flex gap-4 text-center">
+                {isRegistrationClosed ? (
+                  <span className="text-red-500 font-bold px-4 py-2 bg-red-500/10 rounded-lg">Registration Closed</span>
+                ) : (
+                  Object.keys(timeLeft).length > 0 && (
+                    <>
+                      <div className="flex flex-col">
+                        <span className="text-2xl font-bold font-mono text-cheese-yellow">{timeLeft.days}</span>
+                        <span className="text-xs text-gray-500 uppercase">Days</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-2xl font-bold font-mono text-cheese-yellow">{timeLeft.hours}</span>
+                        <span className="text-xs text-gray-500 uppercase">Hrs</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-2xl font-bold font-mono text-cheese-yellow">{timeLeft.minutes}</span>
+                        <span className="text-xs text-gray-500 uppercase">Mins</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-2xl font-bold font-mono text-cheese-yellow">{timeLeft.seconds}</span>
+                        <span className="text-xs text-gray-500 uppercase">Secs</span>
+                      </div>
+                    </>
+                  )
+                )}
+              </div>
+            </motion.div>
+        )}
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -144,12 +224,34 @@ const Registration = () => {
           className="bg-[#1a1a1a] border border-white/10 rounded-2xl shadow-2xl overflow-hidden"
         >
           <div className="p-8 border-b border-white/10 bg-[#1a1a1a]">
-            <h1 className="text-3xl font-bold text-white mb-2">Team Registration</h1>
-            <p className="text-gray-400">Build your squad for Cheesehacks 2026 (Max 4 members)</p>
+            {isRegistrationClosed ? (
+              <div className="text-center py-4">
+                <h1 className="text-3xl font-bold text-white mb-2">Registration Closed</h1>
+                <p className="text-gray-400">We've reached the deadline! See you at the event.</p>
+              </div>
+            ) : (
+                <>
+                <h1 className="text-3xl font-bold text-white mb-2">Team Registration</h1>
+                <p className="text-gray-400">Build your squad for Cheesehacks 2026 (Max 4 members)</p>
+                </>
+            )}
           </div>
 
           <div className="p-8">
-            {isSuccess ? (
+            {isRegistrationClosed && !isSuccess ? (
+               <div className="flex flex-col items-center justify-center py-8 text-center">
+                  <AlertCircle className="w-16 h-16 text-gray-600 mb-4" />
+                  <p className="text-gray-400 max-w-md">
+                    Registration is no longer available. If you believe this is an error, please contact the organizers.
+                  </p>
+                  <Link 
+                    to="/"
+                    className="mt-6 px-8 py-3 rounded-full bg-white/10 text-white font-bold hover:bg-white/20 transition-colors"
+                  >
+                    Return Home
+                  </Link>
+               </div>
+            ) : isSuccess ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
                 <motion.div
                   initial={{ scale: 0 }}
@@ -263,7 +365,7 @@ const Registration = () => {
                 <div className="pt-6 border-t border-white/10 flex justify-end">
                   <button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isRegistrationClosed}
                     className="px-8 py-4 rounded-full bg-cheese-yellow text-black font-bold text-lg hover:bg-cheese-accent transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shadow-cheese-yellow/20"
                   >
                     {isSubmitting ? 'Registering...' : 'Complete Registration'}
