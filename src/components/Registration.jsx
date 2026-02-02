@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Plus, Trash2, AlertCircle, CheckCircle2, ArrowRight, Clock } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { BAD_WORDS } from '../badWords';
 
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOEm6Fwu4vRi0YH5_2CF5nEQSxe1PFp-UU-234kd6Rp771elmrzQ2o8Fyf0yJze7mUjA/exec"
@@ -14,6 +14,7 @@ const Registration = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [cancelError, setCancelError] = useState(null);
   
   const calculateTimeLeft = () => {
     const difference = +REGISTRATION_DEADLINE - +new Date();
@@ -32,6 +33,10 @@ const Registration = () => {
 
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
   const [isRegistrationClosed, setIsRegistrationClosed] = useState(false);
+  const [searchParams] = useSearchParams();
+  const [showManageMode, setShowManageMode] = useState(searchParams.get('mode') === 'cancel');
+  const [manageEmail, setManageEmail] = useState('');
+  const [manageName, setManageName] = useState('');
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -160,6 +165,43 @@ const Registration = () => {
     }
   };
 
+  const handleCancelRegistration = async (e) => {
+    e.preventDefault();
+    setCancelError(null);
+    if (!manageEmail.trim()) {
+      setCancelError("Please enter your email address.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            headers: { "Content-Type": "text/plain" },
+            body: JSON.stringify({ 
+                action: 'delete', 
+                email: manageEmail, 
+                name: manageName // Optional, but nice to pass
+            })
+        });
+
+        const result = await response.json();
+        if (result.status === 'success') {
+            alert("Your registration has been successfully cancelled.");
+            setManageEmail('');
+            setManageName('');
+            setShowManageMode(false);
+        } else {
+            setCancelError(result.message || "Could not find a registration with that email.");
+        }
+    } catch (error) {
+        console.error("Cancellation Error:", error);
+        setCancelError("Network error. Please try again.");
+    } finally {
+        setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#0f0f0f] text-white pt-24 pb-12 px-4 relative overflow-hidden">
       {/* Background Elements */}
@@ -229,9 +271,14 @@ const Registration = () => {
                 <h1 className="text-3xl font-bold text-white mb-2">Registration Closed</h1>
                 <p className="text-gray-400">We've reached the deadline! See you at the event.</p>
               </div>
+            ) : showManageMode ? (
+              <>
+                <h1 className="text-3xl font-bold text-white mb-2">Cancel Registration</h1>
+                <p className="text-gray-400">Remove your information from our database.</p>
+              </>
             ) : (
                 <>
-                <h1 className="text-3xl font-bold text-white mb-2">Team Registration</h1>
+                <h1 className="text-3xl font-bold text-white mb-2">Individual & Team Registration</h1>
                 <p className="text-gray-400">Build your squad for Cheesehacks 2026 (Max 4 members)</p>
                 </>
             )}
@@ -271,6 +318,54 @@ const Registration = () => {
                   Return Home
                 </Link>
               </div>
+            ) : showManageMode ? (
+              <form onSubmit={handleCancelRegistration} className="space-y-6">
+                 {cancelError && (
+                    <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-3 text-red-500">
+                      <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+                      <p className="text-sm font-medium">Unable to find team with provided email and/or name</p>
+                    </div>
+                 )}
+                 <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Email Address to Remove</label>
+                    <input
+                      type="email"
+                      value={manageEmail}
+                      onChange={(e) => setManageEmail(e.target.value)}
+                      className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 transition-colors"
+                      placeholder="Enter the email you registered with"
+                      required
+                    />
+                 </div>
+                 {/* Optional Name Field for user confidence, though ID is email */}
+                 <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Name (Optional)</label>
+                    <input
+                      type="text"
+                      value={manageName}
+                      onChange={(e) => setManageName(e.target.value)}
+                      className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 transition-colors"
+                      placeholder="Verify your name"
+                    />
+                 </div>
+                 
+                 <div className="pt-4 flex flex-col md:flex-row gap-4 justify-between items-center">
+                    <button
+                        type="button"
+                        onClick={() => setShowManageMode(false)}
+                        className="text-gray-400 hover:text-white transition-colors text-sm"
+                    >
+                        Back to Registration
+                    </button>
+                    <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="px-8 py-3 rounded-full bg-red-500/10 border border-red-500/50 text-red-500 font-bold hover:bg-red-500 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    >
+                        {isSubmitting ? 'Processing...' : 'Cancel My Registration'}
+                    </button>
+                 </div>
+              </form>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Team Name */}
@@ -362,7 +457,7 @@ const Registration = () => {
                   </button>
                 )}
 
-                <div className="pt-6 border-t border-white/10 flex justify-end">
+                <div className="pt-6 border-t border-white/10 flex flex-col md:flex-row justify-end items-center gap-4">
                   <button
                     type="submit"
                     disabled={isSubmitting || isRegistrationClosed}

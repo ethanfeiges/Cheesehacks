@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Calendar, MapPin, AlertCircle } from 'lucide-react';
+import { ArrowRight, Calendar, MapPin, AlertCircle, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import GoogleText from './GoogleText';
 import logo from '../assets/logo.png';
@@ -10,6 +10,9 @@ const REGISTRATION_DEADLINE = new Date("2026-02-23T23:59:59");
 const Hero = () => {
   const [timeLeft, setTimeLeft] = useState({});
   const [isRegistrationClosed, setIsRegistrationClosed] = useState(false);
+  
+  // Check if we've already visited to prevent re-animating
+  const [shouldAnimate] = useState(() => !sessionStorage.getItem('hasVisitedHero'));
 
   const calculateTimeLeft = () => {
     const difference = +REGISTRATION_DEADLINE - +new Date();
@@ -27,6 +30,7 @@ const Hero = () => {
   };
 
   useEffect(() => {
+    sessionStorage.setItem('hasVisitedHero', 'true');
     const timer = setInterval(() => {
       const remaining = calculateTimeLeft();
       setTimeLeft(remaining);
@@ -151,7 +155,7 @@ const Hero = () => {
             <div className="max-w-6xl mx-auto text-center">
               <motion.div
                 variants={containerVariants}
-                initial="hidden"
+                initial={shouldAnimate ? "hidden" : "visible"}
                 animate="visible"
               >
                 <motion.div variants={itemVariants}>
@@ -161,11 +165,11 @@ const Hero = () => {
                   </span>
                 </motion.div>
                 
-                <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-tight">
+                <motion.h1 variants={itemVariants} className="text-4xl md:text-7xl font-bold tracking-tight mb-6 leading-tight">
                   Build the <span className="text-white italic relative inline-block">Future</span> at <br />
                   <span className="flex items-center justify-center gap-4 mt-2">
-                    <img src={logo} alt="Cheesehacks Logo" className="h-16 w-16 md:h-20 md:w-20 rounded-full" />
-                    <GoogleText mode="char" className="text-5xl md:text-7xl">Cheesehacks 2026</GoogleText>
+                    <img src={logo} alt="Cheesehacks Logo" className="h-12 w-12 md:h-20 md:w-20 rounded-full" />
+                    <GoogleText mode="char" className="text-4xl md:text-7xl">Cheesehacks 2026</GoogleText>
                   </span>
                 </motion.h1>
                 
@@ -173,13 +177,16 @@ const Hero = () => {
                   Join 300+ student developers for 24 hours of creation and innovation. 
                 </motion.p>
 
-                <motion.div variants={itemVariants} className="mb-8">
+                <motion.div variants={itemVariants} className="mb-8 flex flex-col items-center gap-3">
                    {!isRegistrationClosed && Object.keys(timeLeft).length > 0 && (
-                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-cheese-yellow font-mono">
-                        <span>Registration closes in:</span>
-                        <span className="font-bold">
-                          {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
-                        </span>
+                      <div className="flex flex-col md:flex-row items-center gap-3">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-cheese-yellow font-mono text-sm md:text-base">
+                          <span>Registration closes in:</span>
+                          <span className="font-bold">
+                            {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
+                          </span>
+                        </div>
+                        <span className="text-gray-400 text-sm md:text-base">(Feb 23rd @ Midnight)</span>
                       </div>
                    )}
                    {isRegistrationClosed && (
@@ -190,7 +197,7 @@ const Hero = () => {
                    )}
                 </motion.div>
                 
-                <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-center justify-center gap-4 mb-12">
+                <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-center justify-center gap-4 mb-8">
                   {isRegistrationClosed ? (
                     <button 
                       disabled
@@ -211,6 +218,8 @@ const Hero = () => {
                 View Schedule
                   </a>
                 </motion.div>
+
+                {/* Cancel registration button removed */}
 
                 <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-center justify-center gap-8 text-gray-200 text-lg md:text-xl font-medium">
                   <div className="flex items-center gap-3 bg-white/5 px-6 py-3 rounded-xl border border-white/10">
