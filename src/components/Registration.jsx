@@ -309,7 +309,7 @@ const Registration = () => {
                 </motion.div>
                 <h3 className="text-3xl font-bold text-white mb-4">Registration Successful!</h3>
                 <p className="text-gray-400 mb-8 max-w-md">
-                  Get ready to hack! We've sent a confirmation email to all team members with further instructions.
+                  Get ready to hack! Your team has been registered. More information will be emailed out before the hackathon.
                 </p>
                 <Link 
                   to="/"

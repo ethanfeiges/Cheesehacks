@@ -1,9 +1,14 @@
 import React from 'react';
 import { Instagram } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
 import GoogleText from './GoogleText';
 
 const Footer = () => {
+    const { pathname } = useLocation();
+    const isHome = pathname === '/';
+    const getLink = (hash) => isHome ? hash : `/${hash}`;
+
 return (
     <footer className="border-t border-white/10 bg-black/20 pt-16 pb-8">
         <div className="container mx-auto px-6">
@@ -29,10 +34,10 @@ return (
                 <div>
                     <h4 className="font-bold mb-4">Links</h4>
                     <ul className="space-y-2 text-gray-400">
-                        <li><a href="#about" className="hover:text-cheese-yellow transition-colors">About</a></li>
-                        <li><a href="#schedule" className="hover:text-cheese-yellow transition-colors">Schedule</a></li>
-                        <li><a href="#sponsors" className="hover:text-cheese-yellow transition-colors">Sponsors</a></li>
-                        <li><a href="#faq" className="hover:text-cheese-yellow transition-colors">FAQ</a></li>
+                        <li><a href={getLink("#about")} className="hover:text-cheese-yellow transition-colors">About</a></li>
+                        <li><a href={getLink("#schedule")} className="hover:text-cheese-yellow transition-colors">Schedule</a></li>
+                        <li><a href={getLink("#sponsors")} className="hover:text-cheese-yellow transition-colors">Sponsors</a></li>
+                        <li><a href={getLink("#faq")} className="hover:text-cheese-yellow transition-colors">FAQ</a></li>
                     </ul>
                 </div>
             </div>
