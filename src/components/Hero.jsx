@@ -236,7 +236,7 @@ const Hero = () => {
               </div>
               
               {/* Decorative Grid */}
-      <div className="absolute bottom-0 left-0 right-0 h-[200px] bg-gradient-to-t from-[#0f0f0f] to-transparent z-20" />
+      <div className="absolute bottom-0 left-0 right-0 h-[200px] bg-gradient-to-t from-[#0f0f0f] to-transparent z-20 pointer-events-none" />
       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 z-0 pointer-events-none"></div>
     </section>
   );
