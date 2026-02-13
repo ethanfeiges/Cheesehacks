@@ -15,7 +15,7 @@ const Sponsors = () => {
           Backed by <GoogleText mode="word">Industry Leaders</GoogleText>
         </motion.h2>
 
-        <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-24">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-24 flex-wrap">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -23,7 +23,7 @@ const Sponsors = () => {
             transition={{ delay: 0.1 }}
             className="group"
           >
-            <div className="text-4xl font-bold text-gray-400 group-hover:text-white transition-colors duration-300 flex items-center gap-2">
+            <div className="text-4xl font-bold flex items-center gap-2">
               <span className="text-blue-500">G</span>
               <span className="text-red-500">o</span>
               <span className="text-yellow-500">o</span>
@@ -40,11 +40,38 @@ const Sponsors = () => {
             transition={{ delay: 0.2 }}
             className="group"
           >
-            <div className="text-2xl md:text-3xl font-bold text-gray-400 group-hover:text-[#c5050c] transition-colors duration-300 text-center">
+            <div className="text-2xl md:text-3xl font-bold text-[#c5050c] text-center">
               UW-Madison
-              <span className="block text-sm md:text-lg font-normal text-gray-500 group-hover:text-gray-300 mt-1">
+              <span className="block text-sm md:text-lg font-normal text-gray-500 mt-1">
                 Computer Sciences
               </span>
+            </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="group"
+          >
+            <div className="text-3xl font-bold text-[#90C63E] text-center tracking-tighter" style={{ fontFamily: 'Impact, sans-serif' }}>
+              MONSTER
+              <span className="block text-sm font-normal text-white mt-1 tracking-normal font-sans">
+                ENERGY
+              </span>
+            </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 }}
+            className="group"
+          >
+             <div className="text-3xl font-extrabold text-[#FF4081]">
+              bubbl<span className="text-[#FFD54F]">'</span>r
             </div>
           </motion.div>
         </div>

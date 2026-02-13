@@ -4,7 +4,7 @@ import { ArrowLeft, Plus, Trash2, AlertCircle, CheckCircle2, ArrowRight, Clock }
 import { Link, useSearchParams } from 'react-router-dom';
 import { BAD_WORDS } from '../badWords';
 
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOEm6Fwu4vRi0YH5_2CF5nEQSxe1PFp-UU-234kd6Rp771elmrzQ2o8Fyf0yJze7mUjA/exec"
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxBPf15Zhhmbh37zREtYEDW752fwte5ClQh7T6YHdY4mbKzMLoDfLXXHO2BnHkp6NtTGw/exec"
 
 const REGISTRATION_DEADLINE = new Date("2026-02-23T23:59:59");
 

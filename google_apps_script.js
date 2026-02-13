@@ -1,14 +1,60 @@
 // This code goes into your Google Apps Script (Extensions > Apps Script in Google Sheets)
 
+function doGet(e) {
+  const lock = LockService.getScriptLock();
+  lock.tryLock(10000);
+
+  try {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+    const rows = sheet.getDataRange().getValues();
+    
+    // Skip header row
+    const dataRow = rows.slice(1);
+    
+    const teams = dataRow.map(row => {
+      // Safety check: ensure row has enough columns
+      if (!row || row.length < 2) return null;
+
+      const teamName = row[1]; // Column B is Team Name
+      
+      // Get names from columns C (2), E (4), G (6), I (8)
+      // Use optional chaining or checks to avoid null reference errors
+      const members = [
+        row[2], 
+        row[4], 
+        row[6], 
+        row[8]
+      ].filter(name => name && String(name).trim() !== "");
+      
+      return {
+        teamName: teamName,
+        members: members
+      };
+    }).filter(t => t && t.teamName);
+
+    return ContentService.createTextOutput(JSON.stringify({ 
+      status: 'success', 
+      teams: teams 
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (e) {
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'error',
+      message: e.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
+  }
+}
+
 function doPost(e) {
   const lock = LockService.getScriptLock();
   lock.tryLock(10000);
 
   try {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0]; // Use first sheet
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
     const data = JSON.parse(e.postData.contents);
-
-    // DELETE ACTION
+    
     if (data.action === 'delete') {
       const targetEmail = data.email ? data.email.trim().toLowerCase() : "";
       const targetName = data.name ? String(data.name).trim().toLowerCase() : "";

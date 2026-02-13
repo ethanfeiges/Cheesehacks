@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../assets/logo.png';
@@ -7,6 +8,7 @@ import GoogleText from './GoogleText';
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,7 +35,8 @@ const Navbar = () => {
       }`}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
-        <div 
+        <Link 
+          to="/" 
           className="flex items-center gap-3 cursor-pointer" 
           onClick={() => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -42,13 +45,14 @@ const Navbar = () => {
         >
           <img src={logo} alt="Cheesehacks Logo" className="h-10 w-10 rounded-full" />
           <GoogleText mode="char" className="text-2xl md:text-3xl">Cheesehacks</GoogleText>
-        </div>
+        </Link>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-10">
-          <a href="#about" className="text-lg font-medium text-gray-300 hover:text-white transition-colors">About</a>
-          <a href="#judging" className="text-lg font-medium text-gray-300 hover:text-white transition-colors">Judging</a>
-          <a href="#faq" className="text-lg font-medium text-gray-300 hover:text-white transition-colors">FAQ</a>
+          <Link to="/teams" className={`text-lg font-medium transition-colors ${location.pathname === '/teams' ? 'text-cheese-yellow' : 'text-gray-300 hover:text-white'}`}>Teams</Link>
+          <a href="/#about" className="text-lg font-medium text-gray-300 hover:text-white transition-colors">About</a>
+          <a href="/#judging" className="text-lg font-medium text-gray-300 hover:text-white transition-colors">Judging</a>
+          <a href="/#faq" className="text-lg font-medium text-gray-300 hover:text-white transition-colors">FAQ</a>
         </div>
 
         {/* Mobile Menu Button */}
@@ -76,22 +80,29 @@ const Navbar = () => {
             className="md:hidden bg-[#0f0f0f] border-b border-white/10 overflow-hidden"
           >
             <div className="flex flex-col items-center py-6 gap-6">
+              <Link 
+                to="/teams" 
+                onClick={closeMenu}
+                className={`text-xl font-medium transition-colors ${location.pathname === '/teams' ? 'text-cheese-yellow' : 'text-gray-300 hover:text-white'}`}
+              >
+                Teams
+              </Link>
               <a 
-                href="#about" 
+                href="/#about" 
                 onClick={closeMenu}
                 className="text-xl font-medium text-gray-300 hover:text-white transition-colors"
               >
                 About
               </a>
               <a 
-                href="#judging" 
+                href="/#judging" 
                 onClick={closeMenu}
                 className="text-xl font-medium text-gray-300 hover:text-white transition-colors"
               >
                 Judging
               </a>
               <a 
-                href="#faq" 
+                href="/#faq" 
                 onClick={closeMenu}
                 className="text-xl font-medium text-gray-300 hover:text-white transition-colors"
               >
